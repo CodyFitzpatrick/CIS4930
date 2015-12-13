@@ -89,7 +89,7 @@ public class Parser {
 			
 			//get country
 			
-			populateCountries(movies, movieYearMap);
+			populateCountries(movies, movieYearMap, actualTitlesMap);
 			System.out.println(movies[0].title);
 			System.out.println(movies[0].country);
 			System.out.println(movies[5006].title);
@@ -120,7 +120,7 @@ public class Parser {
 			writer.close();
 		}
 		
-		public static void populateCountries(Movie[] movies, Map<String, Integer> map) throws IOException {
+		public static void populateCountries(Movie[] movies, Map<String, Integer> map, Map<String, List<String>> actualMoviesMap) throws IOException {
 			File file = new File("countries.txt");
 			int lineNum = 1;
 			try(BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -143,6 +143,23 @@ public class Parser {
 				    	}
 			    		String country = line.substring(j + 1, line.length());
 			    		movies[map.get(movieWithYear)].country = country;
+			    	}
+			    	
+			    	if(!actualMoviesMap.containsKey(movieWithYear)) {
+			    		continue;
+			    	}
+			    	
+			    	List<String> list = actualMoviesMap.get(movieWithYear);
+			    	j = line.lastIndexOf('\t');
+			    	if(j <= 0) {
+			    		continue;
+			    	}
+			    	String country = line.substring(j + 1, line.length());
+			    	for(int i = 0; i < list.size(); i++) {
+			    		//get index of actual title map with movies, set country for each in list
+			    		if(movies[map.get(list.get(i))].country == null) {
+			    			movies[map.get(list.get(i))].country = country;
+			    		}
 			    	}
 			    	
 			    }
@@ -175,7 +192,7 @@ public class Parser {
 			    	String rating = words[3];
 			    	List<String> list = actualMoviesMap.get(words[4]);
 			    	for(int i = 0; i < list.size(); i++) {
-			    		//get index of actual title map with movies, set genre for each in list
+			    		//get index of actual title map with movies, set rating for each in list
 			    		movies[map.get(list.get(i))].rating = rating;
 			    	}
 			    	
