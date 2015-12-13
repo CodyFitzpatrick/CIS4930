@@ -81,7 +81,7 @@ public class Parser {
 			
 			//get ratings
 			
-			populateRatings(movies, movieYearMap);
+			populateRatings(movies, movieYearMap, actualTitlesMap);
 			System.out.println(movies[10].title);
 			System.out.println(movies[10].rating);
 			System.out.println(movies[300].title);
@@ -149,7 +149,7 @@ public class Parser {
 			}
 		}
 		
-		public static void populateRatings(Movie[] movies, Map<String, Integer> map) throws IOException {
+		public static void populateRatings(Movie[] movies, Map<String, Integer> map, Map<String, List<String>> actualMoviesMap) throws IOException {
 			File file = new File("ratings.txt");
 			int lineNum = 1;
 			try(BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -166,6 +166,20 @@ public class Parser {
 			    		String rating = words[3];
 			    		movies[map.get(words[4])].rating = rating;
 			    	}
+			    	
+			    	//have title in file, now check if it is contained in generic title map
+			    	if(words.length < 5 || !actualMoviesMap.containsKey(words[4])) {
+			    		continue;
+			    	}
+
+			    	String rating = words[3];
+			    	List<String> list = actualMoviesMap.get(words[4]);
+			    	for(int i = 0; i < list.size(); i++) {
+			    		//get index of actual title map with movies, set genre for each in list
+			    		movies[map.get(list.get(i))].rating = rating;
+			    	}
+			    	
+			    	
 			    }
 			}
 		}
