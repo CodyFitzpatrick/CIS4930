@@ -37,7 +37,12 @@ public class Parser {
 			//populate just year and title by looking at last closing peren
 			for(int i = 0; i < 10000; i++) {
 				String title = movies[i].title;
-				int j = title.indexOf(')');
+				int j = 0;
+				if(!title.contains("{")) {
+					j = title.lastIndexOf(')');
+				} else {
+					j = title.indexOf(')');
+				}
 				String strToAdd = title.substring(0, j + 1);
 				if(!actualTitlesMap.containsKey(strToAdd)) {
 					List<String> list = new ArrayList<String>();
