@@ -521,7 +521,8 @@ public class Parser {
 			        //add title and year to Movie objects
 			    	int j = line.indexOf('\t');
 		        	String title = line.substring(0, j);
-		        	String year = line.substring(j + 1, line.length());
+		        	j = line.lastIndexOf('(');
+		        	String year = line.substring(j + 1, j + 5);
 			    	movies[index] = new Movie(title);
 			    	movies[index].year = year;
 			    	map.put(title, index);
