@@ -112,15 +112,59 @@ public class Parser {
 			writer.println("Title\tYear\tGenre\tDirector\tExecutive Producer\tMain Actor\tMain Actress\tRating\tCountry");
 			
 			for(int i = 0; i < movies.length ; i++) {
-				writer.print(movies[i].title + "\t");
-				writer.print(movies[i].year + "\t");
-				writer.print(movies[i].genre + "\t");
-				writer.print(movies[i].director + "\t");
-				writer.print(movies[i].producer + "\t");
-				writer.print(movies[i].actor + "\t");
-				writer.print(movies[i].actress + "\t");
-				writer.print(movies[i].rating + "\t");
-				writer.println(movies[i].country);
+				if(movies[i].title.equals("null")) {
+					writer.print("Unknown\t");
+				} else {
+					writer.print(movies[i].title + "\t");
+				}
+				
+				if(movies[i].title.equals("null")) {
+					writer.print("Unknown\t");
+				} else {
+					writer.print(movies[i].year + "\t");
+				}
+				
+				if(movies[i].title.equals("null")) {
+					writer.print("Unknown\t");
+				} else {
+					writer.print(movies[i].genre + "\t");
+				}
+				
+				if(movies[i].title.equals("null")) {
+					writer.print("Unknown\t");
+				} else {
+					writer.print(movies[i].director + "\t");
+				}
+				
+				if(movies[i].title.equals("null")) {
+					writer.print("Unknown\t");
+				} else {
+					writer.print(movies[i].producer + "\t");
+				}
+				
+				if(movies[i].title.equals("null")) {
+					writer.print("Unknown\t");
+				} else {
+					writer.print(movies[i].actor + "\t");
+				}
+				
+				if(movies[i].title.equals("null")) {
+					writer.print("Unknown\t");
+				} else {
+					writer.print(movies[i].actress + "\t");
+				}
+				
+				if(movies[i].title.equals("null")) {
+					writer.print("Unknown\t");
+				} else {
+					writer.print(movies[i].rating + "\t");
+				}
+				
+				if(movies[i].title.equals("null")) {
+					writer.println("Unknown");
+				} else {
+					writer.println(movies[i].country);
+				}
 			}
 			writer.close();
 		}
