@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-public class Parser {
+public class NoNulls {
 	
 		public static void main(String[] args) throws FileNotFoundException, IOException {
 			//outputRandomMoviesToTxt(); //output to random.txt
@@ -29,13 +29,13 @@ public class Parser {
 			System.out.println(movies[0].year);
 			
 			Map<String, Integer> movieYearMap = new HashMap<String, Integer>();
-			for(int i = 0; i < 10000; i++) {
+			for(int i = 0; i < 1000000; i++) {
 				movieYearMap.put(movies[i].title, i);
 			}
 			//map with generic titles and arraylist of actual titles it corresponds to
 			Map<String, List<String>> actualTitlesMap = new HashMap<String, List<String>>();
 			//populate just year and title by looking at last closing peren
-			for(int i = 0; i < 10000; i++) {
+			for(int i = 0; i < 1000000; i++) {
 				String title = movies[i].title;
 				int j = 0;
 				if(!title.contains("{")) {
@@ -107,11 +107,45 @@ public class Parser {
 		}
 		
 		public static void outputTabSeparated(Movie[] movies) throws FileNotFoundException, IOException {
-			PrintWriter writer = new PrintWriter("output2.txt");
+			PrintWriter writer = new PrintWriter("output3.txt");
 
 			writer.println("Title\tYear\tGenre\tDirector\tExecutive Producer\tMain Actor\tMain Actress\tRating\tCountry");
 			
+			//randomly remove until only 10,000 movies left
+			int movieCount = movies.length;
 			for(int i = 0; i < movies.length ; i++) {
+				//if any value null, don't write
+				if(movies[i].title == null || movies[i].year == null || movies[i].genre == null ||
+						movies[i].director == null || movies[i].producer == null ||
+						movies[i].actor == null || movies[i].actress == null ||
+						movies[i].rating == null || movies[i].country == null) {
+					movieCount--;
+					movies[i] = null;
+					continue;
+				}
+			}
+			
+			int count = 0;
+			int low = 0;
+			int high = movies.length;
+			Set<Integer> set = new HashSet<Integer>();
+			
+			while(count < 10000) {
+				Random r = new Random();
+				int result = r.nextInt(high-low) + low;
+				if(!set.contains(result) && movies[result] != null) {
+					count++;
+					set.add(result);
+				}
+			}
+			
+			//have total count of non-null movies, now write 10k random movies
+			for(int i = 0; i < movies.length ; i++) {
+				//if any value null, don't write
+				if(!set.contains(i)) {
+					continue;
+				}
+				
 				writer.print(movies[i].title + "\t");
 				writer.print(movies[i].year + "\t");
 				writer.print(movies[i].genre + "\t");
@@ -208,8 +242,8 @@ public class Parser {
 		
 		public static String[] getMoviesWithYear() throws FileNotFoundException, IOException {
 			//title with year already in title, so iterate over the movies
-				File file = new File("random2.txt");
-				String[] movies = new String[10000];
+				File file = new File("random3.txt");
+				String[] movies = new String[1000000];
 				int index = 0;
 				try(BufferedReader br = new BufferedReader(new FileReader(file))) {
 				    for(String line; (line = br.readLine()) != null; index++) {
@@ -285,7 +319,10 @@ public class Parser {
 				    		int j = line.lastIndexOf('<');
 				    		if(j > 0) {
 				    			//number exists, so get the number
-				    			billingNum = Integer.parseInt(line.substring(j + 1, line.length() - 1));
+				    			String str = line.substring(j + 1, line.length() - 1);
+				    			if(str.matches("[0-9]+")) {
+				    				billingNum = Integer.parseInt(str);
+				    			}
 				    		}
 				    		//check if billing map has the entry or not, if it doesn't then add it
 				    		//if it has it then the num needs to be less than the entry
@@ -361,7 +398,10 @@ public class Parser {
 				    		int j = line.lastIndexOf('<');
 				    		if(j > 0) {
 				    			//number exists, so get the number
-				    			billingNum = Integer.parseInt(line.substring(j + 1, line.length() - 1));
+				    			String str = line.substring(j + 1, line.length() - 1);
+				    			if(str.matches("[0-9]+")) {
+				    				billingNum = Integer.parseInt(str);
+				    			}
 				    		}
 				    		//check if billing map has the entry or not, if it doesn't then add it
 				    		//if it has it then the num needs to be less than the entry
@@ -549,8 +589,8 @@ public class Parser {
 		}
 		
 		public static Movie[] populateRandomMovies(Map<String, Integer> map) throws FileNotFoundException, IOException {
-			File file = new File("random2.txt");
-			Movie[] movies = new Movie[10000];
+			File file = new File("random3.txt");
+			Movie[] movies = new Movie[1000000];
 			int index = 0;
 			try(BufferedReader br = new BufferedReader(new FileReader(file))) {
 			    for(String line; (line = br.readLine()) != null; index++) {
@@ -584,7 +624,7 @@ public class Parser {
 			int low = 16; //16 to 3570077
 			int high = 3570078;
 			
-			while(count < 10000) {
+			while(count < 1000000) {
 				Random r = new Random();
 				int result = r.nextInt(high-low) + low;
 				if(!set.contains(result)) {
@@ -595,7 +635,7 @@ public class Parser {
 			
 			//keep count of current line, if line number matches then parse for movie 
 			//and output movie string with new line to random.txt
-			PrintWriter writer = new PrintWriter("random2.txt");
+			PrintWriter writer = new PrintWriter("random3.txt");
 
 			try(BufferedReader br = new BufferedReader(new FileReader(file))) {
 				int lineNum = 1;
